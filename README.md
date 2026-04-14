@@ -50,6 +50,12 @@ Pull and decrypt a shared env:
 envault pull --env staging
 ```
 
+List all available encrypted environments:
+
+```bash
+envault list
+```
+
 > **Tip:** Add `.env` to your `.gitignore` and commit only the encrypted `.env.vault` file safely.
 
 ---
