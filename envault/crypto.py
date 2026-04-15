@@ -8,6 +8,7 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 NONCE_SIZE = 12  # bytes, standard for AES-GCM
 KEY_SIZE = 32    # bytes, AES-256
+SALT_SIZE = 16   # bytes
 
 
 def derive_key(passphrase: str, salt: bytes) -> bytes:
@@ -26,7 +27,7 @@ def encrypt(plaintext: str, passphrase: str) -> str:
 
     Returns a base64-encoded string: salt(16) + nonce(12) + ciphertext.
     """
-    salt = os.urandom(16)
+    salt = os.urandom(SALT_SIZE)
     nonce = os.urandom(NONCE_SIZE)
     key = derive_key(passphrase, salt)
 
@@ -47,9 +48,15 @@ def decrypt(encoded: str, passphrase: str) -> str:
     except Exception as exc:
         raise ValueError("Invalid encoded payload.") from exc
 
-    salt = payload[:16]
-    nonce = payload[16:16 + NONCE_SIZE]
-    ciphertext = payload[16 + NONCE_SIZE:]
+    min_length = SALT_SIZE + NONCE_SIZE + 1
+    if len(payload) < min_length:
+        raise ValueError(
+            f"Payload too short: expected at least {min_length} bytes, got {len(payload)}."
+        )
+
+    salt = payload[:SALT_SIZE]
+    nonce = payload[SALT_SIZE:SALT_SIZE + NONCE_SIZE]
+    ciphertext = payload[SALT_SIZE + NONCE_SIZE:]
 
     key = derive_key(passphrase, salt)
     aesgcm = AESGCM(key)
