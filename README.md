@@ -1,8 +1,29 @@
 # envault
 
-> A CLI tool for managing and encrypting `.env` files across multiple environments with team-sharing support.
+A CLI tool for managing and encrypting `.env` files across multiple environments
+with team-sharing support.
 
----
+## Features
+
+- **Encrypt / Decrypt** — AES-256-GCM encryption for all secrets
+- **Import / Export** — Read and write `.env` files
+- **Rotate** — Re-encrypt all secrets with a new passphrase
+- **Share** — Export encrypted bundles for team members
+- **Audit log** — Track every read and write event
+- **Diff** — Compare vault contents against a `.env` file
+- **Snapshots** — Save and restore point-in-time vault copies
+- **Search** — Find secrets by key or value pattern
+- **Lint** — Detect empty, placeholder, or duplicate values
+- **Templates** — Render config files from vault secrets
+- **Profiles** — Switch between named environment profiles
+- **Copy** — Clone secrets between vaults
+- **Rename** — Rename a secret key in place
+- **Tags** — Label secrets with arbitrary tags
+- **History** — Track value changes per key
+- **Expiry** — Flag secrets that are past their rotation date
+- **Pin** — Mark secrets as immutable
+- **Watch** — Sync a live `.env` file into the vault on change
+- **Notes** — Attach plaintext annotations to individual secrets
 
 ## Installation
 
@@ -10,71 +31,28 @@
 pip install envault
 ```
 
-Or with pipx for isolated installs:
+## Quick Start
 
-```bash
-pipx install envault
+```python
+from envault.vault import init_vault, set_secret, get_secret
+
+init_vault("vault.json", "my-passphrase")
+set_secret("vault.json", "my-passphrase", "API_KEY", "super-secret")
+print(get_secret("vault.json", "my-passphrase", "API_KEY"))
 ```
 
----
+## Modules
 
-## Usage
+| Module | Purpose |
+|--------|---------|
+| `envault.crypto` | Low-level encrypt/decrypt primitives |
+| `envault.vault` | Core vault read/write operations |
+| `envault.env_io` | `.env` file parsing and serialisation |
+| `envault.commands.*` | High-level feature commands |
 
-Initialize envault in your project:
-
-```bash
-envault init
-```
-
-Encrypt your `.env` file before committing or sharing:
-
-```bash
-envault encrypt --env production
-```
-
-Decrypt on another machine or teammate's environment:
+## Development
 
 ```bash
-envault decrypt --env production --key <your-secret-key>
+pip install -e .[dev]
+pytest
 ```
-
-Push an encrypted env to a shared vault:
-
-```bash
-envault push --env staging
-```
-
-Pull and decrypt a shared env:
-
-```bash
-envault pull --env staging
-```
-
-List all available encrypted environments:
-
-```bash
-envault list
-```
-
-> **Tip:** Add `.env` to your `.gitignore` and commit only the encrypted `.env.vault` file safely.
-
----
-
-## Supported Environments
-
-- `development`
-- `staging`
-- `production`
-- Custom named environments
-
----
-
-## Contributing
-
-Pull requests are welcome. Please open an issue first to discuss any major changes.
-
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
