@@ -12,7 +12,11 @@ def rename_secret(vault_path, old_key: str, new_key: str, passphrase: str) -> No
     """Rename a secret key from old_key to new_key.
 
     Raises RenameError if old_key does not exist or new_key already exists.
+    Raises RenameError if old_key and new_key are the same.
     """
+    if old_key == new_key:
+        raise RenameError("Old and new key names are the same.")
+
     vault = load_vault(vault_path, passphrase)
     secrets = vault.get("secrets", {})
 
