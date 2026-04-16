@@ -72,3 +72,14 @@ def delete_snapshot(snapshot_file: Path) -> None:
     if not snapshot_file.exists():
         raise SnapshotError(f"Snapshot not found: {snapshot_file}")
     snapshot_file.unlink()
+
+
+def find_snapshot(vault_path: Path, label: str) -> Optional[Path]:
+    """Find the most recent snapshot matching the given label.
+
+    Returns the snapshot file path, or None if no match is found.
+    """
+    for snap in list_snapshots(vault_path):
+        if snap["label"] == label:
+            return snap["file"]
+    return None
