@@ -1,5 +1,3 @@
-"""envault command modules."""
-
 from envault.commands import (
     import_export,
     rotate,
@@ -19,6 +17,16 @@ from envault.commands import (
     pin,
     watch,
     notes,
+    generate,
+    fmt,
+    compare,
+    lock,
+    backup,
+    merge,
+    alias,
+    ttl,
+    access,
+    deps,
 )
 
 __all__ = [
@@ -40,4 +48,14 @@ __all__ = [
     "pin",
     "watch",
     "notes",
+    "generate",
+    "fmt",
+    "compare",
+    "lock",
+    "backup",
+    "merge",
+    "alias",
+    "ttl",
+    "access",
+    "deps",
 ]
