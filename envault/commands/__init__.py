@@ -1,3 +1,4 @@
+"""envault commands package."""
 from envault.commands import (
     import_export,
     rotate,
@@ -27,6 +28,11 @@ from envault.commands import (
     ttl,
     access,
     deps,
+    group,
+    group_export,
+    schema,
+    schema_io,
+    webhook,
 )
 
 __all__ = [
@@ -58,4 +64,9 @@ __all__ = [
     "ttl",
     "access",
     "deps",
+    "group",
+    "group_export",
+    "schema",
+    "schema_io",
+    "webhook",
 ]
