@@ -67,3 +67,17 @@ def test_list_pins_reflects_pin_status(vault_path):
 def test_pin_info_str(vault_path):
     info = pin_secret(vault_path, PASS, "API_KEY")
     assert str(info) == "API_KEY: pinned"
+
+
+def test_unpin_info_str(vault_path):
+    pin_secret(vault_path, PASS, "API_KEY")
+    info = unpin_secret(vault_path, PASS, "API_KEY")
+    assert str(info) == "API_KEY: unpinned"
+
+
+def test_pin_idempotent(vault_path):
+    """Pinning an already-pinned key should not raise and should stay pinned."""
+    pin_secret(vault_path, PASS, "API_KEY")
+    info = pin_secret(vault_path, PASS, "API_KEY")
+    assert info.pinned is True
+    assert is_pinned(vault_path, PASS, "API_KEY") is True
