@@ -1,4 +1,3 @@
-"""envault commands package."""
 from envault.commands import (
     import_export,
     rotate,
@@ -33,6 +32,13 @@ from envault.commands import (
     schema,
     schema_io,
     webhook,
+    webhook_audit,
+    env_validate,
+    env_promote,
+    env_check,
+    env_mask,
+    env_diff_apply,
+    env_cast,
 )
 
 __all__ = [
@@ -69,4 +75,11 @@ __all__ = [
     "schema",
     "schema_io",
     "webhook",
+    "webhook_audit",
+    "env_validate",
+    "env_promote",
+    "env_check",
+    "env_mask",
+    "env_diff_apply",
+    "env_cast",
 ]
