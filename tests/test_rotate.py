@@ -68,3 +68,15 @@ def test_list_rotation_candidates(vault_path):
 def test_list_rotation_candidates_empty_vault(vault_path):
     candidates = list_rotation_candidates(vault_path, OLD_PASS)
     assert candidates == []
+
+
+def test_rotate_preserves_all_secret_values(vault_path):
+    """Ensure every secret value is intact after rotation, not just spot-checked."""
+    secrets = {"DB_URL": "postgres://localhost/db", "API_KEY": "abc123", "TOKEN": "tok"}
+    for key, value in secrets.items():
+        set_secret(vault_path, OLD_PASS, key, value)
+
+    rotate_key(vault_path, OLD_PASS, NEW_PASS)
+
+    for key, expected in secrets.items():
+        assert get_secret(vault_path, NEW_PASS, key) == expected
