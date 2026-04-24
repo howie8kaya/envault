@@ -5,50 +5,68 @@ with team-sharing support.
 
 ## Features
 
-- **Encrypt / Decrypt** — AES-256-GCM encryption for all secrets
-- **Import / Export** — Read and write `.env` files
-- **Rotate** — Re-encrypt all secrets with a new passphrase
-- **Share** — Export encrypted bundles for team members
-- **Audit log** — Track every read and write event
-- **Diff** — Compare vault contents against a `.env` file
-- **Snapshots** — Save and restore point-in-time vault copies
-- **Search** — Find secrets by key or value pattern
-- **Lint** — Detect empty, placeholder, or duplicate values
-- **Templates** — Render config files from vault secrets
-- **Profiles** — Switch between named environment profiles
-- **Copy** — Clone secrets between vaults
-- **Rename** — Rename a secret key in place
-- **Tags** — Label secrets with arbitrary tags
-- **History** — Track value changes per key
-- **Expiry** — Flag secrets that are past their rotation date
-- **Pin** — Mark secrets as immutable
-- **Watch** — Sync a live `.env` file into the vault on change
-- **Notes** — Attach plaintext annotations to individual secrets
+- AES-256 encrypted vault files
+- Per-key history, expiry, TTL, and pin metadata
+- Import / export `.env` files
+- Diff, lint, search, and template rendering
+- Snapshot & restore
+- Team sharing via encrypted bundles
+- Audit log for all mutations
+- Key rotation with zero-downtime
+- Environment profiles (`dev`, `staging`, `prod`)
+- Copy / merge / clone vaults
+- Bulk rename, prefix, uppercase, sort, squash, filter
+- Schema validation and type checking
+- Webhook notifications on vault events
+- Secret generation with configurable charsets
+- Dependency tracking between keys
+- Group-based export
+- Session-based vault locking / unlocking
+- Backup & restore
+- Alias resolution
+- Notes and tags per key
+- Access-control metadata per key
+- Watch mode: sync a live `.env` file into the vault
+- Template rendering with strict-mode
+- Value interpolation (`${OTHER_KEY}` expansion)
+- Cast secrets to typed values (int, float, bool, list)
+- Redact secrets from arbitrary text or files
+- Compress / decompress vault subsets
+- Vault statistics
+- Defaults manifest: seed missing keys from a file
+- Trim whitespace from values
+- Flatten nested JSON secrets into dot-notation keys
+- Format / normalise key names
+- **Vault chain resolution** — merge an ordered sequence of vaults with
+  later-wins precedence (e.g. `base → staging → local`)
 
-## Installation
+## Quick start
 
 ```bash
 pip install envault
+
+# create a new vault
+envault init myapp.vault
+
+# set a secret
+envault set myapp.vault DATABASE_URL postgres://localhost/myapp
+
+# export to .env
+envault export myapp.vault > .env
 ```
 
-## Quick Start
+## Vault chain example
 
 ```python
-from envault.vault import init_vault, set_secret, get_secret
+from pathlib import Path
+from envault.commands.env_chain import resolve_chain
 
-init_vault("vault.json", "my-passphrase")
-set_secret("vault.json", "my-passphrase", "API_KEY", "super-secret")
-print(get_secret("vault.json", "my-passphrase", "API_KEY"))
+result = resolve_chain(
+    vault_paths=[Path("base.vault"), Path("prod.vault")],
+    passphrases=["base-pass", "prod-pass"],
+)
+print(result)
 ```
-
-## Modules
-
-| Module | Purpose |
-|--------|---------|
-| `envault.crypto` | Low-level encrypt/decrypt primitives |
-| `envault.vault` | Core vault read/write operations |
-| `envault.env_io` | `.env` file parsing and serialisation |
-| `envault.commands.*` | High-level feature commands |
 
 ## Development
 
@@ -56,3 +74,7 @@ print(get_secret("vault.json", "my-passphrase", "API_KEY"))
 pip install -e .[dev]
 pytest
 ```
+
+## License
+
+MIT
