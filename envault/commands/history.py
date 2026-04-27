@@ -69,8 +69,9 @@ def clear_history(vault_path: str, key: str, passphrase: str) -> int:
     vault = load_vault(vault_path, passphrase)
     meta = vault.get("meta", {})
     history = meta.get(HISTORY_META_KEY, {})
-    count = len(history.get(key, []))
-    history.pop(key, None)
+    if key not in history:
+        raise HistoryError(f"No history found for key: {key!r}")
+    count = len(history.pop(key))
     meta[HISTORY_META_KEY] = history
     vault["meta"] = meta
     save_vault(vault_path, vault, passphrase)
